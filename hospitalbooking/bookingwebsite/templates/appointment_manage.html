@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Appointment Management</title>
+
+<style>
+body {
+    font-family: Arial;
+    margin: 0;
+    background: #f4f6f9;
+}
+
+.header {
+    background: #2c3e50;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.container {
+    padding: 20px;
+}
+
+/* FILTER */
+.filters {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+input, select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 15px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+/* TABLE */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+
+th {
+    background: #3498db;
+    color: white;
+}
+
+/* STATUS */
+.status {
+    padding: 6px 10px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+}
+
+.confirmed { background: #27ae60; }
+.cancelled { background: #e74c3c; }
+.completed { background: #8e44ad; }
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h2>Appointment Management</h2>
+</div>
+
+<div class="container">
+
+    <!-- FILTER -->
+    <form method="GET" class="filters">
+
+        <input type="text" name="search" placeholder="Search user or doctor"
+               value="{{ request.GET.search }}">
+
+        <input type="date" name="date"
+               value="{{ request.GET.date }}">
+
+        <!-- STATUS FILTER -->
+        <select name="status">
+            <option value="">All Status</option>
+
+            <option value="confirmed"
+                {% if request.GET.status == "confirmed" %}selected{% endif %}>
+                Confirmed
+            </option>
+
+            <option value="cancelled"
+                {% if request.GET.status == "cancelled" %}selected{% endif %}>
+                Cancelled
+            </option>
+
+            <option value="completed"
+                {% if request.GET.status == "completed" %}selected{% endif %}>
+                Completed
+            </option>
+        </select>
+
+        <button type="submit">Filter</button>
+    </form>
+
+    <!-- TABLE -->
+    <table>
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Doctor</th>
+                <th>Date</th>
+                <th>Time Slot</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for appointment in appointments %}
+            <tr>
+                <td>{{ appointment.patient.name }}</td>
+                <td>{{ appointment.doctors.name }}</td>
+                <td>{{ appointment.appointment_date|date:"Y-m-d" }}</td>
+                <td>{{ appointment.time_slot }}</td>
+
+                <td>
+                    <span class="status {{ appointment.status }}">
+                        {{ appointment.status|title }}
+                    </span>
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="5">No appointments found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>

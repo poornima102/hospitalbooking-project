@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Doctor Details</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #f4f6f9;
+    margin: 0;
+}
+
+.container {
+    max-width: 750px;
+    background: white;
+    margin: 40px auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.row {
+    display: flex;
+    gap: 15px;
+}
+
+.row .form-group {
+    flex: 1;
+}
+
+/* Buttons */
+.btn {
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 15px;
+    width: 100%;
+    color: white;
+    font-size: 15px;
+}
+
+.edit-btn { background: #3498db; }
+.save-btn { background: #27ae60; display: none; }
+
+/* Image */
+.doctor-img {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.doctor-img img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ddd;
+}
+
+/* Days & Time Styling */
+.days {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.days label {
+    background: #ecf0f1;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+<h2>Doctor Details</h2>
+
+<form id="doctorForm" method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+
+<!-- IMAGE -->
+<div class="doctor-img">
+    {% if doctor.image %}
+        <img src="{{ doctor.image.url }}">
+    {% else %}
+        <img src="https://via.placeholder.com/150">
+    {% endif %}
+</div>
+
+<!-- CHANGE IMAGE -->
+<div class="form-group" id="imageField" style="display:none;">
+    <label>Change Image</label>
+    <input type="file" name="image">
+</div>
+
+<!-- BASIC INFO -->
+<div class="form-group">
+    <label>Name</label>
+    <input type="text" name="name" value="{{ doctor.name }}" disabled>
+</div>
+
+<div class="row">
+    <div class="form-group">
+        <label>Gender</label>
+        <input type="text" name="gender" value="{{ doctor.gender }}" disabled>
+    </div>
+
+    <div class="form-group">
+        <label>Phone</label>
+        <input type="text" name="phone" value="{{ doctor.phone }}" disabled>
+    </div>
+</div>
+
+<div class="form-group">
+    <label>Email</label>
+    <input type="text" name="email" value="{{ doctor.email }}" disabled>
+</div>
+
+<div class="form-group">
+    <label>Specialization</label>
+    <input type="text" name="field" value="{{ doctor.field }}" disabled>
+</div>
+
+<div class="form-group">
+    <label>Qualification</label>
+    <input type="text" name="qualification" value="{{ doctor.qualification }}" disabled>
+</div>
+
+<div class="form-group">
+    <label>Experience</label>
+    <input type="text" name="experience" value="{{ doctor.experience }}" disabled>
+</div>
+
+<!-- ✅ AVAILABLE DAYS -->
+<div class="form-group">
+    <label>Available Days</label>
+    <div class="days">
+
+        <label><input type="checkbox" name="days" value="Monday"
+        {% if "Monday" in selected_days %}checked{% endif %} disabled> Monday</label>
+
+        <label><input type="checkbox" name="days" value="Tuesday"
+        {% if "Tuesday" in selected_days %}checked{% endif %} disabled> Tuesday</label>
+
+        <label><input type="checkbox" name="days" value="Wednesday"
+        {% if "Wednesday" in selected_days %}checked{% endif %} disabled> Wednesday</label>
+
+        <label><input type="checkbox" name="days" value="Thursday"
+        {% if "Thursday" in selected_days %}checked{% endif %} disabled> Thursday</label>
+
+        <label><input type="checkbox" name="days" value="Friday"
+        {% if "Friday" in selected_days %}checked{% endif %} disabled> Friday</label>
+
+        <label><input type="checkbox" name="days" value="Saturday"
+        {% if "Saturday" in selected_days %}checked{% endif %} disabled> Saturday</label>
+
+        <label><input type="checkbox" name="days" value="Sunday"
+        {% if "Sunday" in selected_days %}checked{% endif %} disabled> Sunday</label>
+
+    </div>
+</div>
+
+<!-- ✅ TIME SLOTS -->
+<div class="form-group">
+    <label>Available Time Slots</label>
+    <div class="days">
+
+        <label><input type="checkbox" name="time_slots" value="9:00 AM - 10:00 AM"
+        {% if "9:00 AM - 10:00 AM" in selected_times %}checked{% endif %} disabled> 9:00 AM - 10:00 AM</label>
+
+        <label><input type="checkbox" name="time_slots" value="10:00 AM - 11:00 AM"
+        {% if "10:00 AM - 11:00 AM" in selected_times %}checked{% endif %} disabled> 10:00 AM - 11:00 AM</label>
+
+        <label><input type="checkbox" name="time_slots" value="11:00 AM - 12:00 PM"
+        {% if "11:00 AM - 12:00 PM" in selected_times %}checked{% endif %} disabled> 11:00 AM - 12:00 PM</label>
+
+        <label><input type="checkbox" name="time_slots" value="1:00 PM - 2:00 PM"
+        {% if "1:00 PM - 2:00 PM" in selected_times %}checked{% endif %} disabled> 1:00 PM - 2:00 PM</label>
+
+        <label><input type="checkbox" name="time_slots" value="2:00 PM - 3:00 PM"
+        {% if "2:00 PM - 3:00 PM" in selected_times %}checked{% endif %} disabled> 2:00 PM - 3:00 PM</label>
+
+        <label><input type="checkbox" name="time_slots" value="3:00 PM - 4:00 PM"
+        {% if "3:00 PM - 4:00 PM" in selected_times %}checked{% endif %} disabled> 3:00 PM - 4:00 PM</label>
+
+    </div>
+</div>
+
+<!-- BUTTONS -->
+<button type="button" class="btn edit-btn" onclick="enableEdit()">Edit</button>
+<button type="submit" class="btn save-btn">Save</button>
+
+</form>
+</div>
+
+<script>
+function enableEdit() {
+    let inputs = document.querySelectorAll("#doctorForm input");
+
+    inputs.forEach(i => i.disabled = false);
+
+    document.querySelector(".edit-btn").style.display = "none";
+    document.querySelector(".save-btn").style.display = "block";
+
+    document.getElementById("imageField").style.display = "block";
+}
+</script>
+
+</body>
+</html>

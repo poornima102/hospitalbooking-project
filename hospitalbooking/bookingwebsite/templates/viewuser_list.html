@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>User Management</title>
+
+<style>
+body {
+    font-family: Arial;
+    margin: 0;
+    background: #f4f6f9;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #2c3e50;
+    color: white;
+    padding: 20px;
+}
+
+.header div {
+    display: flex;
+    gap: 10px;
+}
+
+.container {
+    padding: 20px;
+}
+
+.back-btn {
+    background: #34495e;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+
+th {
+    background: #3498db;
+    color: white;
+}
+
+.btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+}
+
+.view-btn {
+    background: #2980b9;
+}
+
+.view-btn:hover {
+    background: #1f6691;
+}
+</style>
+
+</head>
+<body>
+
+<!-- HEADER -->
+
+<div class="header">
+    <h2>User Management</h2>
+
+
+<div>
+    <a href="{% url 'dashboard' %}">
+        <button class="back-btn">Home</button>
+    </a>
+</div>
+
+
+</div>
+
+<!-- TABLE -->
+
+<div class="container">
+
+<table>
+<tr>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Action</th>
+</tr>
+
+{% for user in users %}
+
+<tr>
+    <td>{{ user.name }}</td>
+    <td>{{ user.email }}</td>
+
+
+<td>
+    <a href="{% url 'user_details' user.id %}">
+        <button class="btn view-btn">View Profile</button>
+    </a>
+</td>
+
+</tr>
+{% empty %}
+<tr>
+    <td colspan="3">No users found</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+</body>
+</html>
